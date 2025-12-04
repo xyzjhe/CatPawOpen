@@ -936,6 +936,119 @@ function Pans() {
   )
 }
 
+function DanmuSetting() {
+  const [form] = Form.useForm();
+  const formItemLayout = {
+    labelCol: { span: 6 },
+    wrapperCol: { span: 18 },
+  };
+  const formItemLayoutWithOutLabel = {
+    wrapperCol: { span: 18, offset: 6 },
+  };
+  const api = '/danmu/setting'
+
+  const init = async () => {
+    const data = await http.get(api)
+    form.setFieldsValue(data)
+  }
+
+  const submit = async () => {
+    const data = await form.validateFields()
+    try {
+      await http.put(api, data)
+      message.success('入库成功')
+    } catch (e) {
+      console.error(e)
+      message.error(`入库失败：${e?.message}`)
+    }
+  }
+
+  const reset = async () => {
+    try {
+      await http.delete(api)
+      init()
+      message.success('重置成功')
+    } catch (e) {
+      console.error(e);
+      message.error(`重置失败：${e?.message}`)
+    }
+  }
+
+  useEffect(() => {
+    init()
+  }, [])
+
+  return (
+    <Form form={form} {...formItemLayout}>
+      <Alert message="开启自动推送时，自动选取最快响应的API" type="info" style={{ marginBottom: 12 }}/>
+      <Form.List
+        name="urls"
+        rules={[
+          {
+            required: true,
+            message: '请添加API地址'
+          },
+        ]}
+      >
+        {(fields, { add, remove }, { errors }) => (
+          <>
+            {fields.map((field, index) => (
+              <Form.Item
+                label={index === 0 ? 'API列表' : ''}
+                required={false}
+                key={field.key}
+                {...(index === 0 ? formItemLayout : formItemLayoutWithOutLabel)}
+                style={{marginBottom: 12}}
+              >
+                <Form.Item
+                  {...field}
+                  validateTrigger={['onChange', 'onBlur']}
+                  rules={[
+                    {
+                      required: true,
+                      whitespace: true,
+                      message: `请输入API地址`,
+                    },
+                  ]}
+                  noStyle
+                >
+                  <Input placeholder={`请输入API地址`} style={{ width: '60%' }}/>
+                </Form.Item>
+                {fields.length > 1 ? (
+                  <MinusCircleOutlined
+                    className="dynamic-delete-button"
+                    onClick={() => remove(field.name)}
+                  />
+                ) : null}
+              </Form.Item>
+            ))}
+            <Form.Item label={''} {...formItemLayoutWithOutLabel}>
+              <Button
+                type="dashed"
+                onClick={() => add()}
+                style={{ width: '60%' }}
+                icon={<PlusOutlined />}
+              >
+                添加API
+              </Button>
+              <Form.ErrorList errors={errors} />
+            </Form.Item>
+          </>
+        )}
+      </Form.List>
+      <Form.Item label={"自动推送"} name="autoPush">
+        <Switch/>
+      </Form.Item>
+      <Form.Item label={null}>
+        <Button type="primary" onClick={submit}>
+          保存
+        </Button>
+        <Button danger style={{marginLeft: 16}} onClick={reset}>重置</Button>
+      </Form.Item>
+    </Form>
+  )
+}
+
 function App() {
   const props = {
     accept: ".json",
@@ -1039,6 +1152,9 @@ function App() {
             <Tabs>
               <TabPane tab="网盘列表" key="pans">
                 <Pans/>
+              </TabPane>
+              <TabPane tab="弹幕设置" key="danmu">
+                <DanmuSetting/>
               </TabPane>
             </Tabs>
           </TabPane>

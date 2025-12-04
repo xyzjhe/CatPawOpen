@@ -1,7 +1,7 @@
 import * as esbuild from 'esbuild';
 import fs from 'fs';
 import { createHash } from 'crypto';
-import {getWebsiteBundle} from "./esbuild-website.js";
+import {getWebsiteBundle, getDanmuBundle} from "./esbuild-website.js";
 import JavaScriptObfuscator from 'javascript-obfuscator';
 
 const isDev = process.env.NODE_ENV === 'development'
@@ -33,8 +33,9 @@ function addWebsite() {
                 const filePath = 'dist/index.js';
                 const serverContent = fs.readFileSync(filePath, 'utf8');
                 const websiteContent = await getWebsiteBundle();
+                const danmuContent = await getDanmuBundle();
 
-                fs.writeFileSync(filePath, websiteContent + serverContent);
+                fs.writeFileSync(filePath, websiteContent + danmuContent + serverContent);
             });
         },
     };

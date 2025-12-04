@@ -1,5 +1,5 @@
 import { createServer } from 'http';
-import {getWebsiteBundle} from "../esbuild-website.js";
+import {getWebsiteBundle, getDanmuBundle} from "../esbuild-website.js";
 
 globalThis.catServerFactory = (handle) => {
     let port = 0;
@@ -23,6 +23,7 @@ globalThis.catDartServerPort = () => {
 globalThis.DB_NAME = process.env.DB || 'default'
 
 eval(await getWebsiteBundle());
+eval(await getDanmuBundle());
 
 import { start } from './index.js';
 

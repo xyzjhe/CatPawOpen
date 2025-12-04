@@ -60,6 +60,10 @@ var index_config_default = {
   pans: {
     list: []
   },
+  danmu: {
+    urls: ["https://danmuapi-ten-iota.vercel.app"],
+    autoPush: true
+  },
   alist: [
     {
       name: "🐉神族九帝",

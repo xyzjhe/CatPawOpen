@@ -5,9 +5,7 @@ import * as ExternalGlobalPlugin from "esbuild-plugin-external-global";
 
 const {default: {externalGlobalPlugin}} = ExternalGlobalPlugin
 
-export const getWebsiteBundle = async () => {
-  const clientResult = await esbuild.build({
-    entryPoints: ['src/website/App.jsx'],
+const commonConfig = {
     bundle: true,
     minify: true,
     write: false,
@@ -50,6 +48,12 @@ export const getWebsiteBundle = async () => {
         'axios': 'window.axios',
       })
     ]
+}
+
+export const getWebsiteBundle = async () => {
+  const clientResult = await esbuild.build({
+    ...commonConfig,
+    entryPoints: ['src/website/App.jsx'],
   });
 
   fs.writeFileSync('meta.website.json', JSON.stringify(clientResult.metafile))
@@ -62,6 +66,28 @@ globalThis.websiteBundle = function() {
       const module = { exports };
       \${${JSON.stringify(clientBundle)}}
       module.exports.renderClient();
+    })();
+  \`;
+}();
+\n\n`;
+}
+
+export const getDanmuBundle = async () => {
+    const clientResult = await esbuild.build({
+        ...commonConfig,
+        entryPoints: ['src/website/Danmu.jsx'],
+    });
+
+    fs.writeFileSync('meta.danmu.json', JSON.stringify(clientResult.metafile))
+    const clientBundle = clientResult.outputFiles[0].text;
+    return `
+globalThis.danmuBundle = function() {
+  return \`
+    (function() {
+      const exports = {};
+      const module = { exports };
+      \${${JSON.stringify(clientBundle)}}
+      module.exports.renderDanmu();
     })();
   \`;
 }();

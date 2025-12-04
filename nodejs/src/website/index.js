@@ -14,6 +14,7 @@ import sites from "./sites.js";
 import pans from "./pans.js";
 import backup from "./backup.js";
 import zhizhen from "./zhizhen.js";
+import danmu from "./danmu.js";
 
 export default async function website(fastify) {
   fastify.get('/', (req, res) => {
@@ -26,12 +27,12 @@ export default async function website(fastify) {
       </head>
       <body>
         <div id="app"></div>
-        <script crossorigin src="https://cdn.bootcdn.net/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
-        <script crossorigin src="https://cdn.bootcdn.net/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
-        <script crossorigin src="https://cdn.bootcdn.net/ajax/libs/axios/0.26.0/axios.min.js"></script>
-        <script crossorigin src="https://cdn.bootcdn.net/ajax/libs/dayjs/1.10.8/dayjs.min.js"></script>
-        <script crossorigin src="https://cdn.bootcdn.net/ajax/libs/antd/5.23.3/antd.min.js"></script>
-        <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/antd/5.23.3/reset.min.css">
+        <script crossorigin src="https://lib.baomitu.com/react/18.2.0/umd/react.production.min.js"></script>
+        <script crossorigin src="https://lib.baomitu.com/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+        <script crossorigin src="https://lib.baomitu.com/axios/0.26.0/axios.min.js"></script>
+        <script crossorigin src="https://lib.baomitu.com/dayjs/1.10.8/dayjs.min.js"></script>
+        <script crossorigin src="https://lib.baomitu.com/antd/5.23.3/antd.min.js"></script>
+        <link rel="stylesheet" href="https://lib.baomitu.com/antd/5.23.3/reset.min.css">
         <script>${globalThis.websiteBundle}</script>
       </body>
     </html>
@@ -54,4 +55,5 @@ export default async function website(fastify) {
   fastify.register(sites, {prefix: '/sites'})
   fastify.register(pans, {prefix: '/pans'})
   fastify.register(backup, {prefix: '/backup'})
+  fastify.register(danmu, {prefix: '/danmu'})
 }
