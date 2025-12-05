@@ -18,7 +18,6 @@ const spiders = [douban, duoduo, mogg, leijing, panta, wogg, zhizhen, tgchannel,
 const spiderPrefix = '/spider';
 
 let danmuInfo = {};
-let proxyRequested = false; // Flag to indicate if proxy has been requested
 
 /**
  * A function to initialize the router.
@@ -137,7 +136,6 @@ export default async function router(fastify) {
     );
 
     fastify.get('/danmu-proxy', async (request, reply) => {
-        proxyRequested = true;
         try {
             const {name, episodeNumber} = request.query
             const danmuSetting = await getDanmuSetting(request.server)
@@ -179,7 +177,6 @@ export default async function router(fastify) {
                 reply.header('Content-Type', 'application/xml');
                 reply.send(response.data);
             } else {
-                reply.send({});
                 messageToDart({
                     action: 'toast',
                     opt: {
@@ -187,6 +184,8 @@ export default async function router(fastify) {
                         duration: 3
                     }
                 })
+                reply.header('Content-Type', 'application/xml');
+                reply.send('<?xml version="1.0" encoding="UTF-8"?><i/>');
             }
         } catch (e) {
             console.error('Danmu proxy error:', e);
@@ -219,7 +218,6 @@ export default async function router(fastify) {
                     console.log('danmuInfo', danmuInfo)
                 }
                 if (request.url.endsWith('/play')) {
-                    proxyRequested = false; // Reset flag on each play request
                     const data = JSON.parse(payload)
                     if ((data.url || data.url?.length || data.urls?.length) && !data?.extra?.danmaku) {
                         const key = `${request.body.flag}_${request.body.id}`
