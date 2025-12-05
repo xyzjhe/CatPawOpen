@@ -186,6 +186,7 @@ async function detail(inReq, _outResp) {
             }
         });
         let vod = {
+            vod_name: $('.page-title')[0].children[0].data,
             vod_year: year,
             vod_actor: actor.join(', '),
             vod_director: director.join(', '),
