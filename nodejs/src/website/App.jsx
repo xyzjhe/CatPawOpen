@@ -939,11 +939,11 @@ function Pans() {
 function DanmuSetting() {
   const [form] = Form.useForm();
   const formItemLayout = {
-    labelCol: { span: 6 },
-    wrapperCol: { span: 18 },
+    labelCol: { span: 4 },
+    wrapperCol: { span: 20 },
   };
   const formItemLayoutWithOutLabel = {
-    wrapperCol: { span: 18, offset: 6 },
+    wrapperCol: { span: 20, offset: 4 },
   };
   const api = '/danmu/setting'
 
@@ -1002,6 +1002,7 @@ function DanmuSetting() {
               >
                 <Form.Item
                   {...field}
+                  name={[field.name, 'address']}
                   validateTrigger={['onChange', 'onBlur']}
                   rules={[
                     {
@@ -1012,7 +1013,15 @@ function DanmuSetting() {
                   ]}
                   noStyle
                 >
-                  <Input placeholder={`请输入API地址`} style={{ width: '60%' }}/>
+                  <Input placeholder={`请输入API地址`} style={{ width: '65%' }}/>
+                </Form.Item>
+                <Form.Item
+                  {...field}
+                  name={[field.name, 'name']}
+                  validateTrigger={['onChange', 'onBlur']}
+                  noStyle
+                >
+                  <Input placeholder={`别名`} style={{ width: '25%', marginLeft: 8 }}/>
                 </Form.Item>
                 {fields.length > 1 ? (
                   <MinusCircleOutlined

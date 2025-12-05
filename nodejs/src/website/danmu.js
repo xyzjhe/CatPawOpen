@@ -12,8 +12,6 @@ export const removeCache = async (server) => {
   await server.db.delete(`/danmu`);
 }
 
-export const getDanmuPushUrl = (req, url) => `http://127.0.0.1:${req.server.address().port}/danmu-proxy?url=${encodeURIComponent(url)}`
-
 export default async function danmu(fastify) {
   fastify.get('/setting', async (req, res) => {
     res.send({
@@ -40,7 +38,7 @@ export default async function danmu(fastify) {
     messageToDart({
       action: 'danmuPush',
       opt: {
-        url: getDanmuPushUrl(req, req.body.url)
+        url: req.body.url
       }
     })
     res.send({

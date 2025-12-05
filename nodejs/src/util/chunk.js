@@ -153,7 +153,7 @@ async function chunkStream(inReq, outResp, url, urlKey, headers, option) {
                     if (!exist) {
                         const start = chunkIdx * chunkSize;
                         const end = Math.min(contentLength - 1, (chunkIdx + 1) * chunkSize - 1);
-                        console.log(inReq.id, chunkIdx);
+                        // console.log(inReq.id, chunkIdx);
                         const dlResp = await req.get(url, {
                             responseType: 'stream',
                             timeout: timeout,

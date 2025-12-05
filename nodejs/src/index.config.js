@@ -37,7 +37,7 @@ export default {
         list: [],
     },
     danmu: {
-        urls: ["https://danmuapi-ten-iota.vercel.app"],
+        urls: [{address: "https://danmuapi-ten-iota.vercel.app", name: "默认服务器"}],
         autoPush: true
     },
     alist: [

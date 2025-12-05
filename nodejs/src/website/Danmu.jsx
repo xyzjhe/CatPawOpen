@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { createRoot } from 'react-dom/client';
-import { Input, Tabs, List, Spin, message, Empty, Typography } from 'antd';
+import { Input, Tabs, List, Spin, message, Empty, Typography, Drawer, Button } from 'antd';
+import { SortAscendingOutlined, SortDescendingOutlined } from '@ant-design/icons';
 import axios from 'axios';
 import './Danmu.less';
 
@@ -58,15 +59,36 @@ const setCache = (keyword, data) => {
 
 
 const AnimeResults = ({ animes, sourceUrl }) => {
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [selectedAnime, setSelectedAnime] = useState(null);
+  const [isReversed, setIsReversed] = useState(false);
+
   const push = async (episode) => {
     try {
       await axios.post('/website/danmu/push', {
         url: `${sourceUrl}/api/v2/comment/${episode.episodeId}?format=xml`
       });
       message.success(`已推送，请等待弹幕加载完成`);
+      setIsModalVisible(false); // Close modal on push
     } catch (e) {
       console.error(e);
       message.error(`推送失败`);
+    }
+  };
+
+  const showEpisodes = (anime) => {
+    setSelectedAnime(anime);
+    setIsModalVisible(true);
+    setIsReversed(false); // Reset sort order on open
+  };
+
+  const reverseEpisodes = () => {
+    if (selectedAnime) {
+      setSelectedAnime({
+        ...selectedAnime,
+        episodes: [...selectedAnime.episodes].reverse(),
+      });
+      setIsReversed(prev => !prev);
     }
   };
 
@@ -75,23 +97,39 @@ const AnimeResults = ({ animes, sourceUrl }) => {
   }
 
   return (
-    <Tabs
-      items={animes.map((anime) => ({
-        label: anime.animeTitle,
-        key: anime.animeId,
-        children: (
+    <>
+      <List
+        dataSource={animes}
+        renderItem={(anime) => (
+          <List.Item onClick={() => showEpisodes(anime)}>
+            {anime.animeTitle}
+          </List.Item>
+        )}
+      />
+      {selectedAnime && (
+        <Drawer
+          title={selectedAnime.animeTitle}
+          placement="bottom"
+          onClose={() => setIsModalVisible(false)}
+          open={isModalVisible}
+          height="80%"
+          destroyOnClose
+          closable={false}
+          bodyStyle={{ padding: 0 }}
+          className='drawer'
+          extra={<Button icon={isReversed ? <SortAscendingOutlined /> : <SortDescendingOutlined />} onClick={reverseEpisodes} style={{marginLeft: 16}}/>}
+        >
           <List
-            dataSource={anime.episodes}
+            dataSource={selectedAnime.episodes}
             renderItem={(episode) => (
               <List.Item onClick={() => push(episode)}>
                 {episode.episodeTitle}
               </List.Item>
             )}
           />
-        ),
-      }))}
-      size={'small'}
-    />
+        </Drawer>
+      )}
+    </>
   );
 };
 
@@ -108,12 +146,15 @@ export function Danmu() {
     axios.get('/website/danmu/setting')
       .then(res => {
         if (res.data.code === 0 && res.data.data && res.data.data.urls) {
-          setSources(res.data.data.urls.map(url => ({ name: new URL(url).hostname, url: url })));
+          setSources(res.data.data.urls.map(url => ({ name: url.name || new URL(url.address).hostname, url: url.address })));
         } else {
           message.error('获取弹幕源失败');
         }
       })
-      .catch(() => message.error('获取弹幕源失败'));
+      .catch((e) => {
+        console.error(e);
+        message.error('获取弹幕源失败')
+      });
   }, []);
 
   const handleSearch = useCallback((value, isInitialLoad = false) => {
