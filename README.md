@@ -11,12 +11,4 @@
 
 为了验证可行性，本仓库内集成了部分站源，几乎全部抄袭自其他仓库，感谢：道长、真心、奥秘
 
-### 公参
-
-| 参数 | 用途 |
-|-------|:-----:|
-| req / res | 请查看[fastify文档](https://fastify.dev) |
-| req.server.config | index.config.js的配置内容 |
-| req.server.db | [node-json-db](https://github.com/Belphemur/node-json-db)实例 |
-| req.server.messageToDart | 调用App的action，[action清单](#) |
-| req.server.address() | url、port |
+**基于本仓库的Fork项目建议在`nodejs/package.json`的`build`命令中加入`DB=xx`环境变量来声明唯一的数据库文件名，例如`DB=test`，那么数据库文件名就会是`test.db.json`**
