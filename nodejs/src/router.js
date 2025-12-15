@@ -221,7 +221,16 @@ export default async function router(fastify) {
                     const data = JSON.parse(payload)
                     if ((data.url || data.url?.length || data.urls?.length) && !data?.extra?.danmaku) {
                         const key = `${request.body.flag}_${request.body.id}`
-                        const episodeInfo = danmuInfo[key]
+                        let episodeInfo = danmuInfo[key]
+                        if (episodeInfo && !episodeInfo?.name) {
+                            const playInfo = await messageToDart({
+                                action: 'getPlayInfo',
+                            })
+                            if (playInfo) {
+                                console.log('playInfo', playInfo)
+                                episodeInfo.name = playInfo?.title
+                            }
+                        }
                         if (episodeInfo) {
                             if (!data.extra) {
                                 data.extra = {}
