@@ -64,6 +64,9 @@ var index_config_default = {
     urls: [{ address: "https://danmuapi-ten-iota.vercel.app", name: "默认服务器" }],
     autoPush: true
   },
+  t4: {
+    list: []
+  },
   alist: [
     {
       name: "🐉神族九帝",
