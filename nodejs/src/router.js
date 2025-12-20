@@ -15,12 +15,18 @@ import axios from "axios";
 import { extractTitle, findEpisodeNumber } from './util/danmu-utils.js';
 import {getCache as getT4} from "./website/t4.js";
 import T4Factory from "./spider/video/t4.js";
+import {getCache as getCMS} from "./website/cms.js";
+import CMSFactory from "./spider/video/cms.js";
 
 const getSpiders = async (server) => {
     const spiders = [douban, duoduo, mogg, leijing, panta, wogg, zhizhen, tgchannel, tgsou, baseset, push];
     const t4Data = await getT4(server)
     t4Data.forEach(item => {
         spiders.push(T4Factory(item.name, item.address))
+    })
+    const cmsData = await getCMS(server)
+    cmsData.forEach(item => {
+        spiders.push(CMSFactory(item.name, item.address))
     })
     return spiders
 }

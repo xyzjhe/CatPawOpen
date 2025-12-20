@@ -67,6 +67,9 @@ var index_config_default = {
   t4: {
     list: []
   },
+  cms: {
+    list: []
+  },
   alist: [
     {
       name: "🐉神族九帝",
