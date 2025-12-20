@@ -62,6 +62,11 @@ export default function T4Factory(name, address) {
           flag: req.body.flag,
         }
       })
+      if (!data.url && !data.urls && req.body.id.startsWith('http')) {
+        return {
+          url: req.body.id
+        }
+      }
       return data
     } catch (e) {
       console.warn(e)
