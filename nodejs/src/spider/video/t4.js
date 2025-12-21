@@ -13,7 +13,7 @@ export default function T4Factory(name, address) {
     try {
       const {data} = await api.get('', {
         params: {
-          ac: 'class'
+          filter: true,
         }
       })
       return data
