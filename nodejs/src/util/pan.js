@@ -17,7 +17,7 @@ export async function init(inReq, _outResp) {
     return {};
 }
 
-export async function detail(shareUrls) {
+export async function detail(shareUrls, req) {
     shareUrls = !Array.isArray(shareUrls) ? [shareUrls] : shareUrls;
     const shareUrlsWithMoreInfo = shareUrls.map(url => {
         const key = getPanInfos().find(pan => pan.validator(url))?.key
@@ -91,7 +91,7 @@ export async function detail(shareUrls) {
                 urls.push(data.url);
             }
         } else if(isBaiduLink(shareUrl)) {
-            const data = await Baidu.detail(shareUrl);
+            const data = await Baidu.detail(shareUrl, req);
             if(data && data.from && data.url){
                 froms.push(data.from);
                 urls.push(data.url);

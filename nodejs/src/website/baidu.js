@@ -18,7 +18,7 @@ let qrData = {};
  * @returns {Promise<string>} Cookie字符串
  */
 export const getCache = async (server) => {
-  const key = CryptoJS.enc.Hex.stringify(CryptoJS.MD5(server.config.baidu.cookie || 'default')).toString();
+  const key = 'baidu_cookie';
   const obj = await server.db.getObjectDefault(`/baidu`, {});
   return obj[key] ?? '';
 };
@@ -29,7 +29,7 @@ export const getCache = async (server) => {
  * @param {string} value - Cookie值
  */
 export const setCache = async (server, value) => {
-  const key = CryptoJS.enc.Hex.stringify(CryptoJS.MD5(server.config.baidu.cookie || 'default')).toString();
+  const key = 'baidu_cookie';
   await server.db.push(`/baidu/${key}`, value);
 };
 

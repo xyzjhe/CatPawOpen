@@ -205,6 +205,7 @@ class BaiduDrive {
             vod_name: fileName, // 只使用文件名
             // 文件ID格式: path*uk*shareid*fsid*surl
             vod_id: [item.path.replaceAll('#', '\0'), this.uk, this.shareid, item.fs_id || item.fsid, this.surl].join('*'),
+            vod_size: item.size
           });
         }
       });
@@ -261,6 +262,7 @@ class BaiduDrive {
             vod_name: fileName, // 只使用文件名
             // 文件ID格式: path*uk*shareid*fsid*surl
             vod_id: [item.path.replaceAll('#', '\0'), this.uk, this.shareid, item.fs_id || item.fsid, this.surl].join('*'),
+            vod_size: item.size
           });
         }
       });
@@ -365,7 +367,8 @@ const baiduDrive = new BaiduDrive();
  * @param {string} shareUrl - 分享链接
  * @returns {Promise<Object>} 文件详情
  */
-export async function detail(shareUrl) {
+export async function detail(shareUrl, req) {
+  await initBaidu(req)
   await baiduDrive.getSurl(shareUrl);
   const shareData = await baiduDrive.getShareList();
   if (!shareData) return null;
@@ -451,7 +454,7 @@ export async function play(inReq, _outResp) {
 
       return {
         parse: 0,
-        url: [['原画', `${proxyUrl}/src/redirect/${shareId}/${encodedFileId}/.bin`]],
+        url: ['原画', `${proxyUrl}/src/redirect/${shareId}/${encodedFileId}/.bin`],
         header: {}
       };
     }
